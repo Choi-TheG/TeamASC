@@ -18,11 +18,20 @@ public class MemberController {
 	@Autowired
 	private MemberService memberService;
 	
+	
+	@RequestMapping(value="viewJoin.do", method=RequestMethod.GET)
+	public ModelAndView viewJoin(HttpServletResponse response, HttpServletRequest request) throws Exception {
+		ModelAndView mav = new ModelAndView();
+		
+		mav.setViewName("/member/join");
+		return mav;
+	}
+	
 	@RequestMapping(value="join.do", method=RequestMethod.POST)
 	public ModelAndView join(HttpServletResponse response, HttpServletRequest request) throws Exception {
 		ModelAndView mav = new ModelAndView();
 		
-		String memberNo = request.getParameter("memberNo");
+		
 		String name = request.getParameter("name");
 		String pwd = request.getParameter("pwd");
 		String depart = request.getParameter("depart");
@@ -32,7 +41,7 @@ public class MemberController {
 		String joinDate = request.getParameter("joinDate");
 		String email = request.getParameter("email");
 		
-		MemberVO member = new MemberVO(Integer.parseInt(memberNo), name, pwd, depart, position, birthDate, phoneNum, joinDate, email);
+		MemberVO member = new MemberVO(0, name, pwd, depart, position, birthDate, phoneNum, joinDate, email);
 		boolean flag = memberService.joinMember(member);
 		
 		mav.setViewName("redirect:./list.do");
@@ -61,34 +70,27 @@ public class MemberController {
 			uri = request.getRequestURI();
 		}
 
-		// http://localhost:8090/member/listMember.do�� ��û��
-		int begin = 0; //
+
+		int begin = 0; 
 		if (!((contextPath == null) || ("".equals(contextPath)))) {
-			begin = contextPath.length(); // ��ü ��û�� �� ���̸� ����
+			begin = contextPath.length(); 
 		}
 
 		int end;
 		if (uri.indexOf(";") != -1) {
-			end = uri.indexOf(";"); // ��û uri�� ';'�� ���� ��� ';'���� ��ġ�� ����
+			end = uri.indexOf(";"); 
 		} else if (uri.indexOf("?") != -1) {
-			end = uri.indexOf("?"); // ��û uri�� '?'�� ���� ��� '?' ���� ��ġ�� ����
+			end = uri.indexOf("?"); 
 		} else {
 			end = uri.length();
 		}
 
-		// http://localhost:8090/member/listMember.do�� ��û�� ���� '.do'�� ������
-		// http://localhost:8090/member/listMember�� ���� ��,
-		// �ٽ� http://localhost:8090/member/listMember���� �������� ù��° '/' ��ġ�� ����
-		// ��, �� ���� listMember�� ���Ѵ�.
 		String fileName = uri.substring(begin, end);
 		if (fileName.indexOf(".") != -1) {
-			fileName = fileName.substring(0, fileName.lastIndexOf(".")); // ��û���� �������� ���� '.'�� ��ġ�� ������,
-																			// '.do' �տ������� ���ڿ��� ����
+			fileName = fileName.substring(0, fileName.lastIndexOf(".")); 
 		}
 		if (fileName.lastIndexOf("/") != -1) {
-			fileName = fileName.substring(fileName.lastIndexOf("/"), fileName.length()); // ��û���� �������� ���� '/'��
-																							// ��ġ�� ������, '/'
-																							// ���������� ���ڿ��� ����
+			fileName = fileName.substring(fileName.lastIndexOf("/"), fileName.length()); 
 		}
 		return fileName;
 	}
