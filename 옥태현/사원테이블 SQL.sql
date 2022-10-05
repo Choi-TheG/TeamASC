@@ -9,5 +9,6 @@ position varchar(30) not null default(''),
 birth_date varchar(8) not null default('19991231'),
 phone_num varchar(20) not null default(''),
 join_date varchar(8) not null default('19991231'),
-email varchar(30) not null default('')
+email varchar(30) not null default(''),
+work_yn varchar(1) not null default('Y')
 );
