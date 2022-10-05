@@ -8,7 +8,7 @@
 	</head>
 	<body>
 		<form action="join.do" method="post">
-			사원번호: <input type="text" name="memberNo" value=""><br/>
+			<%-- 사원번호 : <input type="text" name="memberNo" value="${member.memberNo}"><br/> --%>
 			이름 : <input type="text" name="name" value=""><br/>
 			비밀번호 : <input type="password" name="pwd" value=""><br/>
 			부서 : <input type="text" name="depart" value=""><br/>
