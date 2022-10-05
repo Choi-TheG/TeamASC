@@ -9,7 +9,7 @@
 	</head>
 	<body>
 		<h1>Member List</h1>
-		<c:forEach var="member" items="${list}">
+		<a href="viewJoin.do">사원 등록</a>
 		<table>
 			<tr>
 				<th>사번</th>
@@ -19,6 +19,7 @@
 				<th>이메일</th>
 				<th>전화번호</th>
 			</tr>
+			<c:forEach var="member" items="${list}">
 			<tr>
 				<td>${member.memberNo}</td>
 				<td>${member.name}</td>
@@ -26,11 +27,13 @@
 				<td>${member.position}</td>
 				<td>${member.email}</td>
 				<td>${member.phoneNum}</td>
-				<a href="read.do">
-					<button>조회</button>
-				</a>
+				<td>
+					<a href="read.do?memberNo=${member.memberNo}">
+						<button>조회</button>
+					</a>
+				</td>
 			</tr>
+			</c:forEach>
 		</table>
-		</c:forEach>
 	</body>
 </html>
