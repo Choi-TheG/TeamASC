@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+      PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+   
+<mapper namespace="mapper.model">
+	<resultMap id="modelMap" type="modelVO">
+		<id property="memberNo" column="member_no"/>
+		<result property="name" column="name"/>
+		<result property="pwd" column="pwd"/>
+		<result property="depart" column="depart"/>
+		<result property="position" column="position"/>
+		<result property="birthDate" column="birth_date"/>
+		<result property="phoneNum" column="phone_num"/>
+		<result property="joinDate" column="join_date"/>
+		<result property="email" column="email"/>
+	</resultMap>
+
+	<select id="selectMemberById" resultMap="modelMap" resultType="modelVO" parameterType="java.lang.Integer">
+      <![CDATA[
+        select *
+          from member 
+         where member_no = #{memberNo}
+      ]]>
+	</select>
+	
+	<select id="selectMemberList" resultMap="modelMap" resultType="modelVO">
+      <![CDATA[
+        select *
+          from member 
+      ]]>
+	</select>
+	
+	<select id="selectMemberMax" resultMap="modelMap" resultType="modelVO">
+      <![CDATA[
+        select MAX(member_no) as member_no
+          from member 
+      ]]>
+	</select>
+	
+	<select id="insertMember" parameterType="modelVO">
+      <![CDATA[
+        insert into member(member_no,name,pwd,depart,position,birth_date,phone_num,join_date,email) 
+					value (#{memberNo} ,#{name} ,#{pwd} ,#{depart} ,#{position} ,#{birthDate} ,#{phoneNum} ,#{joinDate} ,#{email} );
+      ]]>
+	</select>
+	
+	<select id="deleteMember" parameterType="java.lang.Integer">
+      <![CDATA[
+         delete from member where member_no = #{memberNo}
+      ]]>
+	</select>
+	
+	<select id="updateMember" parameterType="modelVO">
+      <![CDATA[
+         update member 
+            set name = #{name},
+            	pwd = #{pwd},
+            	depart = #{depart},
+            	position = #{position},
+            	birth_date = #{birthDate},
+            	phone_num = #{phoneNum}
+            	join_date = #{joinDate},
+            	email = #{email}
+          where member_no = #{memberNo}
+      ]]>
+	</select>
+	
+	
+	
+</mapper>
+
+
+
+
+
+
+
