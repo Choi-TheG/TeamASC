@@ -10,11 +10,12 @@ public class MemberVO {
 	private String phoneNum;
 	private String joinDate;
 	private String email;
+	private String work_yn;
 	
 	public MemberVO() {};
 	
 	public MemberVO(int memberNo,String name,String pwd,String depart,String position,
-			String birthDate,String phoneNum,String joinDate,String email) {
+			String birthDate,String phoneNum,String joinDate,String email,String work_yn) {
 		this.memberNo = memberNo;
 		this.name = name;
 		this.pwd = pwd;
@@ -24,6 +25,7 @@ public class MemberVO {
 		this.phoneNum = phoneNum;
 		this.joinDate = joinDate;
 		this.email = email;
+		this.work_yn = work_yn;
 	}
 
 	public int getMemberNo() {
@@ -98,6 +100,14 @@ public class MemberVO {
 		this.email = email;
 	}
 	
+	public String getWork_yn() {
+		return work_yn;
+	}
+
+	public void setWork_yn(String work_yn) {
+		this.work_yn = work_yn;
+	}
+
 	@Override
 	public String toString() {
 		String result = null;
