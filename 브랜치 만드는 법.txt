@@ -1,0 +1,24 @@
+1. git 설치하기
+https://git-scm.com/download/win
+
+2. git clone 하기
+   - 임의의 폴더를 하나 만들어서 거기다 프로젝트 github clone하기
+   - 폴더에 들어가서 마우스 우클릭 `git bash here` 선택
+   - 터미널이 뜨면 git clone https://github.com/~~~~~
+   - 😱단, git push 절대 금지
+
+
+3. git branch 만들기
+
+terminal에 git branch라고 치면 현재 브랜치 리스트가 나옴
+아마 거의 대부분 main만 나올 것
+
+브랜치 만드는 방법 `git branch 브랜치명`
+
+`git branch` 입력 후 생성됐는지 확인
+
+브랜치 변경하는 법
+
+`git checkout 브랜치명` 브랜치명은 내가 만든 브랜치명
+
+다시 `git branch` 입력 후 내가 만든 브랜치가 초록색으로 표시되는지 확인하기
