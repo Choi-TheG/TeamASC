@@ -48,6 +48,7 @@ create table category(
 seq int primary key,
 category_code varchar(10) not null default(''),
 category_name varchar(100) not null default(''),
+division varchar(1) not null default(''),
 insert_time datetime default(now()),
 update_time datetime 
 );
@@ -74,5 +75,6 @@ read_count integer not null default 0,
 next_seq varchar(100) not null,
 write_date datetime not null default (now()),
 secret_yn varchar(1) not null default('N'),
+question_type varchar(20) not null default(''),
 insert_time datetime default(now()),
 update_time datetime );
