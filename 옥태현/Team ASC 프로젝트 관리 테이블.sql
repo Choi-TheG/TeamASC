@@ -68,7 +68,7 @@ project_seq integer not null default(0),
 calendar_category varchar(20) not null default(''),
 start_date varchar(8) not null default(''),
 end_date varchar(8) not null default(''),
-content varchar(50) not null default(''),
+content varchar(100) not null default(''),
 finish_yn varchar(1) not null default('N'),
 
 insert_time datetime default(now()),
