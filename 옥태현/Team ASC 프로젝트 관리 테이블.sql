@@ -31,6 +31,7 @@ from_user_seq integer not null default(''),
 to_user_seq integer not null default(''),
 content text not null default(''),
 invite_yn varchar(1) not null default(''),
+confirm varchar(1) not null default('N'),
 send_date varchar(8) not null default(now()),
 
 insert_time datetime default(now()),
