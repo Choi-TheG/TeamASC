@@ -29,6 +29,13 @@ public class DocumentsService {
 		
 		return flag;
 	}
+
+	public boolean createDocuments(int projectSeq) {
+		boolean flag = true;
+		flag = documentsDAO.createDocuments(projectSeq);
+		
+		return flag;
+	}
 	
 	/*
 	public DocumentsVO readPlan(String projectSeq) {

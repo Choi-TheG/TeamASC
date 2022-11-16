@@ -99,7 +99,7 @@
 		<tr>
 			<th class="table-title">파일</th>
 			<td>
-				<input type="file" name="uploadFile"><br />
+				<input type="file" name="uploadFile"><br/>
 			</td>
 		</tr>
 	</table>

@@ -4,26 +4,30 @@
    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="mapper.documents">
-
-   <resultMap id="documentsMap" type="documentsVO">
-      <id property="documentsSeq" column="documents_seq"/>
-      <result property="projectSeq" column="project_seq"/>
-      <result property="documentsName" column="documents_name"/>
-      <result property="fileName" column="file_name"/>
-	  <result property="realFileName" column="real_file_name"/>
-      <result property="updateTime" column="update_time"/>
-      <result property="writer" column="writer"/>
-      <result property="teamLeader" column="team_leader"/>
-   </resultMap>
+	
+	<resultMap id="documentsMap" type="documentsVO">
+		<id property="documentsSeq" column="documents_seq"/>
+		<result property="projectSeq" column="project_seq"/>
+		<result property="documentsName" column="documents_name"/>
+		<result property="fileName" column="file_name"/>
+		<result property="realFileName" column="real_file_name"/>
+		<result property="updateTime" column="update_time"/>
+		<result property="writer" column="writer"/>
+		<result property="teamLeader" column="team_leader"/>
+	</resultMap>
+   <!-- 행 삽입 -->
+   <select id="insertDocuments" parameterType="java.lang.Integer">
+      <![CDATA[
+        insert into documents(project_seq, documents_name)
+		values(#{projectSeq}, '문서명');
+      ]]>
+   </select>
    
+   <!-- 프로젝트 생성 시 생성 -->
    <select id="createDocuments" parameterType="java.lang.Integer">
       <![CDATA[
         insert into documents(project_seq, documents_name)
 		values(#{projectSeq}, '기획서');
-		insert into documents(project_seq, documents_name)
-		values(#{projectSeq}, '요구사항일람표');
-		insert into documents(project_seq, documents_name)
-		values(#{projectSeq}, 'DB설계서');		
       ]]>
    </select>
    
@@ -31,8 +35,8 @@
       <![CDATA[
         update documents
            set documents_name = #{documentsName},
-               fileName = #{file_name},
-               realFileName = #{real_file_name},
+               file_name = #{fileName},
+               real_file_name = #{realFileName},
                update_time = now()
          where documents_seq = #{documentsSeq};
       ]]>
@@ -42,7 +46,7 @@
       <![CDATA[
         select * from documents 
         where project_seq = #{projectSeq} 
-        	order by documents_seq desc;
+        	order by documents_seq asc;
       ]]>
    </select>
    

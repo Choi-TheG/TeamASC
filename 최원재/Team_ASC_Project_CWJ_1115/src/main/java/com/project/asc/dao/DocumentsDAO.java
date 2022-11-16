@@ -46,4 +46,14 @@ public class DocumentsDAO {
 		}
 		return flag;
 	}
+
+	public boolean createDocuments(int projectSeq) {
+		boolean flag = false;
+		int affectedCount = sqlSession.insert("mapper.documents.createDocuments", projectSeq);
+		if(affectedCount > 0) {
+			flag = true;
+		}
+		
+		return flag;
+	}
 }

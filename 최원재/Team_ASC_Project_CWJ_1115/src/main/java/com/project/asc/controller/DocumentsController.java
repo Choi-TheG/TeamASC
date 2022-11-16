@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.project.asc.service.DocumentsService;
 import com.project.asc.vo.DocumentsVO;
+import com.project.asc.vo.ProjectVO;
 
 
 @Controller("documentsController")
@@ -28,10 +30,32 @@ public class DocumentsController {
 	@Autowired
 	private DocumentsService documentsService;
 	
+	/* 행 삽입 */
+	@RequestMapping(value="/createDocuments",method= {RequestMethod.POST, RequestMethod.GET})
+	public ModelAndView createDocuments(@ModelAttribute("documents") DocumentsVO documents, 
+			HttpServletRequest request, HttpServletResponse response) throws IOException{
+		ModelAndView mav = new ModelAndView();
+		// session에서 project정보 받아오기
+		ProjectVO project = (ProjectVO) request.getSession().getAttribute("project");
+		int projectSeq = project.getProjectSeq();
+		documents.setProjectSeq(projectSeq);
+		
+		boolean flag = false;
+		flag = documentsService.createDocuments(projectSeq);
+		if(flag) {
+			mav.setViewName("redirect:/documents/readDocuments");
+		}
+		
+		return mav;
+	}
+	
 	/* 문서 관리 페이지 */
 	@RequestMapping(value="/readDocuments", method= {RequestMethod.POST, RequestMethod.GET})
-	public ModelAndView readDocuments(@RequestParam("projectSeq") String projectSeq, HttpServletRequest request, HttpServletResponse response) throws IOException{
+	public ModelAndView readDocuments(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		ModelAndView mav = new ModelAndView();
+		// session에서 project정보 받아오기
+		ProjectVO project = (ProjectVO) request.getSession().getAttribute("project");
+		String projectSeq = String.valueOf(project.getProjectSeq());
 		ArrayList<DocumentsVO> list = documentsService.readDocuments(projectSeq);
 		
 		mav.addObject("list",list);
@@ -41,30 +65,41 @@ public class DocumentsController {
 		return mav;
 	}
 	
-	
 	/* 문서 업로드 */
-	@RequestMapping(value="/uploadDocuments",method=RequestMethod.POST)
-	public ModelAndView uploadDocuments(@ModelAttribute("documents") DocumentsVO documents, @RequestParam("documentsSeq") String documentsSeq,
+	@RequestMapping(value="/updateDocuments",method= {RequestMethod.POST, RequestMethod.GET})
+	public ModelAndView updateDocuments(@ModelAttribute("documents") DocumentsVO documents, 
 			HttpServletRequest request, HttpServletResponse response) throws IOException {
 		ModelAndView mav = new ModelAndView();
+		// session에서 project정보 받아오기
+		ProjectVO project = (ProjectVO) request.getSession().getAttribute("project");
+//		DocumentsVO documents = (DocumentsVO) request.getSession().getAttribute("documents");
+		int projectSeq = project.getProjectSeq();
+		documents.setProjectSeq(projectSeq);
+		System.out.println(documents);
 		
-		// 파일 업로드 처리
-		String fileName=null;
+		//파일 업로드 처리
+		String fileName = null;
 		MultipartFile uploadFile = documents.getUploadFile();
-		if (!uploadFile.isEmpty()) {
-			String originalFileName = uploadFile.getOriginalFilename();
-			String ext = FilenameUtils.getExtension(originalFileName);	//확장자 구하기
-			UUID uuid = UUID.randomUUID();	//UUID 구하기
-			fileName=uuid+"."+ext;
-			uploadFile.transferTo(new File("C:\\upload\\" + fileName));
+		String originalFileName = "";
+		if(!uploadFile.isEmpty()) {
+			originalFileName = uploadFile.getOriginalFilename();
+			//확장자 구하기
+			String ext = FilenameUtils.getExtension(originalFileName);
+			//UUID 구하기
+			UUID uuid = UUID.randomUUID();
+			
+			fileName = uuid + "." + ext;
+			uploadFile.transferTo(new File("C:\\dev\\file\\" + fileName));
 		}
+		documents.setFileName(fileName != null ? fileName : "");
+		documents.setRealFileName(fileName != null ? originalFileName : "");
 		
 		// 작성일자 및 작성자 업데이트
 		boolean flag = documentsService.updateDocuments(documents);
 		if(flag) {
 			System.out.println("update done.");
 		}
-		documents.setFileName(fileName);
+//		documents.setFileName(fileName);
 		
 		mav.setViewName("redirect:/documents/readDocuments");
 		return mav;

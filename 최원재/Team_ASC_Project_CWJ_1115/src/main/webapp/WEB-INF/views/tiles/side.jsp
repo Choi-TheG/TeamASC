@@ -52,7 +52,7 @@
         <div class="sideMenu"><a href="${contextPath}/dashboard/viewDashboard?projectSeq=${project.projectSeq }" id="sm4">대시보드</a></div>
         <div class="sideMenu"><a href="${contextPath}/project/manageProject" id="sm1">프로젝트 관리</a></div>
         <div class="sideMenu"><a href="${contextPath}/project/viewScheduleProject" id="sm2">프로젝트 일정</a></div>
-        <div class="sideMenu"><a href="${contextPath}/documents/readDocuments?projectSeq=${project.projectSeq}" id="sm3">문서 관리</a></div>
+        <div class="sideMenu"><a href="${contextPath}/documents/readDocuments" id="sm3">문서 관리</a></div>
         <div class="sideMenu"><a href="${contextPath}/board/boardListPaging?projectSeq=${project.projectSeq }&pageNum=1" id="sm5">이슈리스트</a></div>
     </div>       
 </div>

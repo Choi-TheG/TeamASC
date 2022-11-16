@@ -129,7 +129,7 @@ public class BoardController {
 		
 		mav.setViewName(viewName);
 		return mav;
-	}	
+	}
 	
 	/* 수정페이지 이동 */
 	@RequestMapping(value="/viewUpdateBoard", method=RequestMethod.GET)
