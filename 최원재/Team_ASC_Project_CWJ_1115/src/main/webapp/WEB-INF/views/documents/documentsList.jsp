@@ -101,7 +101,7 @@ input[type=button]{
 	text-align: center;
 }
 
-#createButton{
+#createBtn{
 	width: 100%;
 	height: 25px;
 	border: 1px solid #c2c2c2;
@@ -111,7 +111,7 @@ input[type=button]{
 	text-align: center;
 	font-size: 14px;
 }
-#createButton:hover{
+#createBtn:hover{
 	border-radius: 5px;
 	background-color: #f5f5f5;
 }
@@ -119,7 +119,7 @@ input[type=button]{
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 <body>
-<form action="#" method="post" enctype="multipart/form-data">
+<form action="createDocuments.do" method="post" enctype="multipart/form-data">
 <table id="topmenu">
 <tr>
 	<th width="30%">
@@ -167,30 +167,71 @@ input[type=button]{
 </table>
 </form>
 <!-- 버튼 누르면 행 추가 -->
-<input type="button" value="+ 추가" onclick='return addRow();' id="createButton">
+<input type="button" value="+ 추가" id="createBtn">
+<input type="submit" value="++++++++">
 <script>
 $(document).ready(function(){
 	var fileTarget = $('.filebox .upload-hidden');
 	
-	  fileTarget.on('change', function(){
-	      if(window.FileReader){
-	          var filename = $(this)[0].files[0].name;
-	      } else {
-	          var filename = $(this).val().split('/').pop().split('\\').pop();
-	      }
-	
-	      $(this).siblings('.upload-name').val(filename);
-	  });
+	fileTarget.on('change', function(){
+		if(window.FileReader){
+			var filename = $(this)[0].files[0].name;
+		} else {
+			var filename = $(this).val().split('/').pop().split('\\').pop();
+		}
+		
+		$(this).siblings('.upload-name').val(filename);
+	});
+	/* 
+	$("#createBtn").on('button',function(){ // submit 버튼 클릭시 발동 , 아이디 중복이거나 중복 체크 안했을경우 진행 안됨
+		// table id 찾기
+		const table = document.getElementById('topmenu');
+		
+		// 행 추가
+		const newRow = table.insertRow();
+		
+		
+		// Cell 추가 (name= not null)
+		const newCellName = newRow.insertCell(0);
+		newCellName.innerHTML = '<input type="text" value="${documents.documentsName}" name="documentsName" id="documentsName" placeholder="문서명"/>';
+		const newCellFile = newRow.insertCell(1);
+		newCellFile.innerHTML = '<div class="filebox"><input class="upload-name" value="업로드 파일" style="width:70%;" disabled="disabled"><label for="ex_filename">업로드</label><input type="file" id="ex_filename" class="upload-hidden" name="uploadFile"></div>';
+		const newCellUpdateTime = newRow.insertCell(2);
+		newCellUpdateTime.innerHTML = '<input type="text" value="${documents.updateTime}" name="updateTime" readonly="readonly">';
+		const newCellWriter = newRow.insertCell(3);
+		newCellWriter.innerHTML = '<input type="text" value="${documents.writer}" name="writer" readonly="readonly">';
+		const newCellUpDown = newRow.insertCell(4);
+		newCellUpDown.innerHTML = '<a href="/updateDocuments?documentsSeq=${documents.documentsSeq}"><button class="documentsSide">수정</button></a><input type="button" name="download" value="다운로드" class="documentsSide" style="margin-top:2px;">';
+		
+		$.ajax({
+			type : "GET",
+			url : "/createDocuments",
+			dataType : "text",
+			async: false,
+			data : {documentsSeq: ${documentsSeq}, projectSeq: ${projectSeq}},
+			success : function(data,status){
+				let jsonBoolean = JSON.parse(data);
+				if(!jsonBoolean){
+					alert("존재하지 않는 계정 입니다");
+					return false;
+				}
+			},
+			error : function(data,status){
+				console.log("error");
+			},
+			complete : function(data,status){
+				console.log("finish");
+			}
+		}); //ajax
+	}); //submit */
 });
 
-function addRow(){
+function addRow(frm){
 	// table id 찾기
 	const table = document.getElementById('topmenu');
 	
 	// 행 추가
 	const newRow = table.insertRow();
-	
-	// 값 가져오기(컨트롤러 연결) : rest ?
 	
 	
 	// Cell 추가 (name= not null)
@@ -204,8 +245,14 @@ function addRow(){
 	newCellWriter.innerHTML = '<input type="text" value="${documents.writer}" name="writer" readonly="readonly">';
 	const newCellUpDown = newRow.insertCell(4);
 	newCellUpDown.innerHTML = '<a href="/updateDocuments?documentsSeq=${documents.documentsSeq}"><button class="documentsSide">수정</button></a><input type="button" name="download" value="다운로드" class="documentsSide" style="margin-top:2px;">';
-	
+
+	// 값 가져오기(컨트롤러 연결)
+	console.log(frm);
+	frm.action="createDocuments"
+	frm.method = "post";
+	frm.submit();
 }
+
 </script>
 </body>
 </html>

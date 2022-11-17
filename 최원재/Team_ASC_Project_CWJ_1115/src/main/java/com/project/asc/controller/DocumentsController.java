@@ -31,10 +31,11 @@ public class DocumentsController {
 	private DocumentsService documentsService;
 	
 	/* 행 삽입 */
-	@RequestMapping(value="/createDocuments",method= {RequestMethod.POST, RequestMethod.GET})
+	@RequestMapping(value="/createDocuments.do",method= {RequestMethod.POST, RequestMethod.GET})
 	public ModelAndView createDocuments(@ModelAttribute("documents") DocumentsVO documents, 
 			HttpServletRequest request, HttpServletResponse response) throws IOException{
 		ModelAndView mav = new ModelAndView();
+		System.out.println(documents);
 		// session에서 project정보 받아오기
 		ProjectVO project = (ProjectVO) request.getSession().getAttribute("project");
 		int projectSeq = project.getProjectSeq();

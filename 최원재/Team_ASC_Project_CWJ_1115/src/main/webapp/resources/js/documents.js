@@ -1,7 +1,9 @@
 	// 초기화
 	function deleteDocuments(frm){
+		console.log(frm);
 		var check = confirm('최초의 상태로 돌아갑니다 초기화 하시겠습니까?');
 		if(check==true){
+			console.log(frm);
 			frm.action="deletePlan.do";
 			frm.method="post";
 			frm.submit();
