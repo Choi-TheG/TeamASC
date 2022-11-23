@@ -77,7 +77,6 @@
 <form action="./writeBoard" method="POST" enctype="multipart/form-data" >
 <input type="hidden" name="userSeq" value="${member.userSeq}">
 <input type="hidden" name="projectSeq" value="${project.projectSeq }">
-
 	<table class="table">
 		<tr>
 			<th class="table-title">분류</th>

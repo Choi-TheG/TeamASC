@@ -28,7 +28,7 @@ tr:hover{ background-color:#f5f5f5; }
 input[type=text]{
 	border: 0px;
 	width: 98%;
-	height: 30px;
+	height: 70px;
 	font-size: 20px;
 	display: center;
 }
@@ -119,21 +119,20 @@ button, input[type=button]{
 </style>
 </head>
 <body>
-<form action="#" method="POST" enctype="multipart/form-data" >
+<form action="uploadFile" method="POST" enctype="multipart/form-data">
 <table id="documentsTable">
 	<tr><th width="30%">문서명</th><th width="35%">파일</th><th width="15%">업로드일자</th><th width="10%">작성자</th><th style="width:8%;border-bottom:none;background-color:none;">수정</th></tr>
 	<c:forEach var="documents" items="${list}" varStatus="index">
 		<tr><td hidden="hidden"><input type="text" value="${documents.documentsSeq}" name="documentsSeq"></td><td hidden="hidden"></td></tr>
 		<tr>
 			<td>
-				<input type="text" value="${documents.documentsName}" name="documentsName" id="documentsName${documents.documentsSeq}" placeholder="문서명">
+				<a onclick="updateBtn(${documents.documentsSeq});"><input type="text" value="${documents.documentsName}" name="documentsName" class="documentsName" id="documentsName${documents.documentsSeq}" placeholder="문서명" readonly="readonly"></a>
 			</td>
 			<td>
 				<div class="filebox">
-					<input class="upload-name" value="업로드 파일" style="width:70%;" disabled="disabled">
-					<label for="ex_filename${documents.documentsSeq}">업로드</label> 
-					<input type="file" id="ex_filename${documents.documentsSeq}" class="upload-hidden" name="uploadFile">
-					<%-- <input type="file" name="uploadFile" id="file${documents.documentsSeq}"> --%>
+					<a href="./fileDownload?documentsSeq=${documents.documentsSeq}&fileName=${board.fileName}&realFileName=${board.realFileName}">
+						<input class="upload-name" value="${documents.realFileName}" id="download${documents.documentsSeq}" style="width:100%;" disabled="disabled">
+					</a>
 				</div>
 			</td>
 			<td>
@@ -144,6 +143,7 @@ button, input[type=button]{
 			</td>
 			<td>
 				<input type="button" onclick="updateBtn(${documents.documentsSeq});" value="수정" style="width:90%;margin-bottom:3px;">
+				<%-- <input type="button" id="updateBtn${documents.documentsSeq}" value="수정" style="width:90%;margin-bottom:3px;"> --%>
 				<br/>
 				<c:choose>
 				<c:when test="${documents.realFileName ne null}">
@@ -158,129 +158,90 @@ button, input[type=button]{
 		</tr>
 	</c:forEach>
 </table>
-</form>
 <input type="button" onclick="location.href='createDocument.do'" value="+ 추가" id="createBtn">
+</form>
+
+<!-- ////////////////////////////////////////script////////////////////////////////////// -->
 <script>
 // 배우고 수정할것
 $(document).ready(function(){
 	console.log('ready');
-	/* const docSeq = document.getElementById("documentsSeq").value; */
 	
-	// 행 추가
-	$('#createBtn2').on('click',function(){
-		$.ajax({
-			type : "get",
-			url : "test.do",
-			dataType : "text",
-			success : function(data,status){
-				console.log(data);
-				let jsonObj = JSON.parse(data);
-				let result = "<tr><td><input type=\"text\" value=\""+jsonObj.documentsName
-				+"\" name=\"documentsName\" id=\"documentsName\" placeholder=\"문서명\"></td><td><div class=\"filebox\"><input class=\"upload-name\" value=\"업로드 파일\" style=\"width:70%;\" disabled=\"disabled\">"
-				+"<label for=\"ex_filename\">업로드</label><input type=\"file\" id=\"ex_filename\" class=\"upload-hidden\" name=\"uploadFile\"></div></td>"
-				+"<td><input type=\"text\" value=\""+jsonObj.updateTime+"\" name=\"updateTime\" readonly=\"readonly\"></td>"
-				+"<td><input type=\"text\" value=\""+jsonObj.writer+"}\" name=\"writer\" readonly=\"readonly\"></td>"
-				+"<td><input type=\"button\" value=\"수정\" onclick=\"location.href='viewUpdateDocument?documentsSeq=\""+jsonObj.documentsSeq+"\';\" style=\"width:90%;margin-bottom:3px;\"></br>"
-				+"<input type=\"button\" value=\"삭제\" onclick=\"location.href='viewUpdateDocument?documentsSeq=\""+jsonObj.documentsSeq+"\';\" style=\"width:90%;\">"
-				+"<input type=\"button\" value=\"다운로드\" onclick=\"return ready(this.form);\"></td>"
-				
-				location.reload();
-			},
-			error : function(data,status){
-				
-			},
-			complete : function(data,status){
-				
-			}
-		}); // ajax end
-	}); // 행 추가 createBtn end
+	// upload file 이름추출
+	var fileTarget = $('.filebox .upload-hidden');
 	
-	/* // upload file
-	$('#file'+docSeq).on('click',function(){
-		$.ajax({
-			type : "post",
-			url : "uploadFile",
-			enctype : "multipart/form-data",
-			data : {uploadFile:uploadFile},
-			contentType : false,
-			processData : false,
-			success : function(data,status){
-				const jsonBoolean = JSON.parse(data);
-				if(jsonBoolean){
-					alert(uploadFile);
-					location.reload();
-				} else{
-					alert('fail');
-				}
-			},
-			error : function(data, status){
-				
-			},
-			complete : function(data, status){
-				
-			}
-		}); // ajax end
-	}); // upload end */
+	fileTarget.on('change', function(){  // 값이 변경되면
+	if(window.FileReader){  // modern browser
+		var filename = $(this)[0].files[0].name;
+	} 
+	else {  // old IE
+		var filename = $(this).val().split('/').pop().split('\\').pop();  // 파일명만 추출
+	}
+	// 추출한 파일명 삽입
+	$(this).siblings('.upload-name').val(filename);
+	}); // upload file end
 }); // document end
 
 function updateBtn(documentsSeq){
-	const documentsName = document.getElementById("documentsName"+documentsSeq).value;
-	const writer = document.getElementById("writer"+documentsSeq).value;
-	const uploadFile = document.getElementById("ex_filename"+documentsSeq).value;
+	window.screen.width // 좌우화면 크기
+	window.screen.height // 상하화면 크기
+	var popupWidth = 200;
+	var popupHeight = 300;
+	var popupX = (window.screen.width /2) - (popupWidth /2); // 팝업창 가로크기(X축) 1/2
+	var popupY = (window.screen.height /2) - (popupHeight /2); // 팝업창 세로크기(Y축) 1/2
+	window.open("./viewUpdateDocument?documentsSeq="+documentsSeq,"문서 수정","width=500px, height=300px, top=0%, left=0%, directories=no, location=no, menubar=no, status=yes, toolbar=no");
+	window.opener="nothing";
+	window.open('','_parent','');
+	/* window.close(); */
+}
+/* function updateBtn(documentsSeq){
+	var form = new FormData();
+	form.append("uploadFile", $("#fileName"+documentsSeq)[0]);
 	
+	// upload file
+	$.ajax({
+		type : 'POST',
+		enctype: 'multipart/form-data',
+		processData: false,
+		contentType: false,
+		url : "uploadFile",
+		data : form,
+		success : function(data){
+			alert(uploadFile);
+		},
+		error : function(data, status){
+			
+		},
+		complete : function(data, status){
+			
+		}
+	}); // ajax end
+	
+	
+	var documentsName = document.getElementById("documentsName"+documentsSeq).value;
+	var writer = document.getElementById("writer"+documentsSeq).value;
+	
+	// update
 	$.ajax({
 		type : "get",
 		url : "updateDocument",
 		dataType : "text",
 		data : {documentsSeq:documentsSeq,documentsName:documentsName,writer:writer},
-		success : function(data,status){
-			const jsonBoolean = JSON.parse(data);
-			if(jsonBoolean){
-				/* alert(documentsSeq+', '+documentsName+', '+writer); */
-				console.log('modify done.');
-				location.reload();
-			} else{
-				console.log('fail');
-			}
+		success : function(data){
+			console.log('update done.');
+			location.reload();
 		},
-		error : function(data,status){
+		error : function(data){
 			
 		},
-		complete : function(data,status){
+		complete : function(data){
 			
 		}
 	}); // ajax end
-	
-	// upload file
-	$('#file'+documentsSeq).on('click',function(){
-		$.ajax({
-			type : "post",
-			url : "uploadFile",
-			enctype : "multipart/form-data",
-			data : {uploadFile:uploadFile},
-			contentType : false,
-			processData : false,
-			success : function(data,status){
-				const jsonBoolean = JSON.parse(data);
-				if(jsonBoolean){
-					alert(uploadFile);
-					location.reload();
-				} else{
-					alert('fail');
-				}
-			},
-			error : function(data, status){
-				
-			},
-			complete : function(data, status){
-				
-			}
-		}); // ajax end
-	}); // upload end
-}
+} // updateBtn end */
 
 function deleteBtn(documentsSeq){
-	const check = confirm('ㄹㅇ삭제함?');
+	const check = confirm('삭제하시겠습니까?');
 	if(check){
 		location.href='deleteDocument?documentsSeq='+documentsSeq;
 	}

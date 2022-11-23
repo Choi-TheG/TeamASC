@@ -32,7 +32,7 @@ public class DocumentsService {
 	// 문서관리 수정페이지
 	public DocumentsVO selectOneDocument(String documents) {
 		DocumentsVO vo = null;
-		documentsDAO.selectOneDocument(documents);
+		vo = documentsDAO.selectOneDocument(documents);
 		
 		return vo;
 	}
@@ -41,6 +41,14 @@ public class DocumentsService {
 	public boolean updateDocument(DocumentsVO vo) {
 		boolean flag = false;
 		flag = documentsDAO.updateDocument(vo);
+		
+		return flag;
+	}
+	
+	//파일 업로드
+	public boolean uploadFile(DocumentsVO vo) {
+		boolean flag = false;
+		flag = documentsDAO.uploadFile(vo);
 		
 		return flag;
 	}

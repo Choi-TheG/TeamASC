@@ -34,7 +34,7 @@ public class DocumentsDAO {
 	
 	public DocumentsVO selectOneDocument(String documentsSeq) {
 		DocumentsVO vo = null;
-		vo = sqlSession.selectOne("mapper.documents.selectOneDocument", vo);
+		vo = sqlSession.selectOne("mapper.documents.selectOneDocument", Integer.parseInt(documentsSeq));
 		
 		return vo;
 	}
@@ -46,6 +46,17 @@ public class DocumentsDAO {
 		if(affectedCount>0) {
 			flag = true;
 		}
+		return flag;
+	}
+	
+	public boolean uploadFile(DocumentsVO vo) {
+		boolean flag = false;
+		int affectedCount = sqlSession.update("mapper.documents.uploadFile", vo);
+		
+		if(affectedCount>0) {
+			flag = true;
+		}
+		
 		return flag;
 	}
 	

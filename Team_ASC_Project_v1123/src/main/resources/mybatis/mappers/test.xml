@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.test">
+
+	<resultMap id="testMap" type="testVO">
+		<id property="testSeq" column="test_seq"/>
+		<result property="projectSeq" column="project_seq"/>
+		<result property="program" column="program"/>
+		<result property="customer" column="customer"/>
+		<result property="manager" column="manager"/>
+		<result property="scenarioNo" column="scenario_no"/>
+		<result property="scenarioData" column="scenario_data"/>
+		<result property="expected" column="expected"/>
+		<result property="result" column="result"/>
+		<result property="remark" column="remark"/>
+	</resultMap>
+
+	<!-- 단위테스트 목록출력  -->
+	<select id="selectAllTest" parameterType="java.lang.Integer" resultMap="testMap" resultType="testVO">
+		<![CDATA[
+			select * from test
+			where project_seq = #{projectSeq};			       	
+		]]>
+	</select>
+	
+</mapper>
